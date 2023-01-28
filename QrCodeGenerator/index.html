@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title>QR-Code Generator - Version 0.3</title>
+
+<script type="text/javascript" src="src/jquery-3.6.3.min.js"></script>
+<script type="text/javascript" src="src/jquery.qrcode.js"></script>
+<script type="text/javascript" src="src/qrcode.js"></script>
+
+<link href="css/stylesheet.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+<body>
+
+
+<div align="center">
+
+	<h2>QR-Code Generator</h2>
+	<h4>Entwickelt von Michael Wydler, Daniel Wydler &copy;2013</h4>
+	
+	<form onsubmit="return generateQR()" action="">
+		<textarea id="url" cols="50" rows="5">blog.wydler.eu</textarea><br />
+		QR-Größe: <input id="size" type="text" size="20" value="128" /><br />
+		<input type="submit" value=" Absenden " />
+	</form>
+	<br /> <br /> <br />
+	
+	<div id="wrapper">
+		<div id="links">
+			<p>Erstellt als Canvas:</p>
+			<div id="qrcodeCanvas"></div>
+		</div>
+
+		<div id="rechts">
+			<p>Erstellt als Grafik:</p>
+			<div id="qrcodeTable"></div>
+		</div>
+		
+		<div id="blocker"></div>
+	
+	</div>
+	
+	<script type="text/javascript">
+		function generateQR() {
+			try {
+				// remove all objects from #qrcodeCanvas.
+				$('#qrcodeCanvas').empty();
+				
+				// get url from input field.
+				var url = $("#url").val();
+				var size = $("#size").val();
+				
+				if (url == "") {
+					alert("Kein Text eingegeben!");
+				}
+				else if (size == "") {
+					alert("Keine Größee definiert!");
+				}
+				else if (size < 50) {
+					alert("Da bekommt man Augenkrebs!");
+				}
+				else if (size > 240) {
+					alert("Maximalgröße ist 240 im Moment!");
+				}
+				else {
+					// generate qr code.
+					$('#qrcodeCanvas').qrcode({
+						text	: url,
+						height	: size,
+						width	: size
+					});
+					// get canvas object and save as png.
+					var canvas = $('#qrcodeCanvas > canvas')[0];
+					var img    = canvas.toDataURL("image/png");
+
+					// display generated image file.
+					$('#qrcodeTable').html('<img src="'+img+'" alt="Grafik" />');
+				}
+			} catch (e) {
+				console.log(e);
+			}
+
+			return false;
+		}		
+	</script>
+</div>
+</body>
+</html>
