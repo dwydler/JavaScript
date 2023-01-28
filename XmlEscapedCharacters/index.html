@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!--
+Entwickelt von Daniel Wydler
+-->
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>XML - Escaping special characters</title>
+
+		<script type="text/javascript" src="src/jquery-3.6.1.min.js"></script>
+
+		<link href="css/stylesheet.css" rel="stylesheet" type="text/css" media="all" />
+	</head>
+
+	<body>
+		<div align="center">
+			<h2>XML - Escaping special characters</h2>
+			
+			<form onsubmit="return convertString()" action="">
+				<textarea id="string" cols="80" rows="4">@&l,hNv[J>&?@75b>x-%</textarea><br /><br />
+				<input type="submit" value=" Absenden " />
+				<h5>Attention: The new string is automatically in to the clipboard.<br />
+				Achtung: Die neue Zeichenkette wird automatisch in die Zwischenablage übernommen.</h5>
+			</form>
+			
+			<br />			
+			<div id="wrapper">
+				<div id="links">
+					<p>Konvertierte Zeichenkette:</p>
+				</div>
+				<div id="rechts">	
+					<p><div id="xmlstring">&nbsp;</div></p>
+				</div>			
+				<div id="blocker"></div>
+			</div>
+			
+			<script type="text/javascript">
+				function convertString() {
+				
+					try {
+						// remove all objects from #xmlstring.
+						$('#xmlstring').empty();
+						
+						// get password from input field.
+						var string = $("#string").val();
+						
+						if (string == "") {
+							alert("Keine Zeichenkette eingegeben!");
+						}
+						else {
+							// Source: https://www.ibm.com/docs/en/was-liberty/base?topic=SSEQTP_liberty/com.ibm.websphere.wlp.doc/ae/rwlp_xml_escape.htm
+							
+							// Replace the char '&'
+							var tomcat = string.replace(/&/g,"&amp;");
+							
+							// Replace the char '<'
+							tomcat = tomcat.replace(/</g,"&lt;");
+							
+							// Replace the char '>'
+							tomcat = tomcat.replace(/>/g,"&gt;");
+
+							// Replace the char '"'
+							tomcat = tomcat.replace(/"/g,"&quot;");
+
+							// Replace the char '''
+							tomcat = tomcat.replace(/'/g,"&apos;");
+
+							// Display password with escaped chars
+							$('#xmlstring').text(tomcat);
+							
+							// Copy new string to clipboard
+							navigator.clipboard.writeText(tomcat);
+							//alert("Copied the text: " + tomcat);
+						}
+					} catch (e) {
+						console.log(e);
+					}
+					return false;
+				}		
+			</script>
+		</div>
+	</body>
+	
+</html>
